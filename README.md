@@ -2,7 +2,7 @@ Creating imperatives that read as advice.
 
 ### imperatives_gutenberg.py
 
-Using the text from a few books on Project Gutenberg (`nltk.corpus.gutenberg`), search for phrases of the form '.*ing the .*s' and prepend words like 'Start', 'Stop', 'Occasionally', etc.
+Using the text from a few books on Project Gutenberg (`nltk.corpus.gutenberg`), search for phrases of the form `.*ing the .*s` and prepend words like 'Start', 'Stop', 'Occasionally', etc.
 
 #### Best examples
 
