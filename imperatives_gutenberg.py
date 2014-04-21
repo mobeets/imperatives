@@ -30,9 +30,9 @@ def main():
 	for r in rs:
 		if random.choice([0, 1]):
 			chc = random.choice(['start', 'stop'])
-			if random.choice([0, 1]):
-				chc_2 = random.choice(['occasionally', 'constantly'])
-				chc += ' ' + chc_2
+		elif random.choice([0, 1]):
+			chc = random.choice(['occasionally', 'constantly'])
+			r[0] = lemmatizer.lemmatize(r[0].lower(), 'v')
 		else:
 			chc = random.choice(['always', 'never'])
 			r[0] = lemmatizer.lemmatize(r[0].lower(), 'v')
