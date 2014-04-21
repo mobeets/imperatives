@@ -9,12 +9,15 @@ import argparse
 from pattern.en import wordnet, conjugate, pluralize, singularize, quantify
 from pattern.en.wordlist import BASIC
 
-UNCOMMON = 2
-if UNCOMMON == 0:
+singled_if_word = lambda x: singularize(x) if wordnet.synsets(singularize(x)) else None
+singled_if_word_2 = lambda x: x[:-1] if wordnet.synsets(x[:-1]) else None
+
+SOURCE = 2
+if SOURCE == 0:
 	NOUNS = wordnet.NOUNS.keys()
 	VERBS = wordnet.VERBS.keys()
 	ADJS = wordnet.ADJECTIVES.keys()
-elif UNCOMMON == 1:
+elif SOURCE == 1:
 	basic_words = lambda pos: [w for w in BASIC if wordnet.synsets(w, pos=pos)]
 	NOUNS = basic_words('NN')
 	VERBS = basic_words('VB')
@@ -24,7 +27,6 @@ else:
 	load = lambda filename: [w.lower().strip() for w in open(filename).read().split('\n') if w.lower().strip() and wordnet.synsets(w.lower().strip())]
 
 	NOUNS = load('nouns.txt')
-	singled_if_word = lambda n: singularize(x) if wordnet.synsets(singularize(x)) else None
 	NOUNS = [singled_if_word(x) if x.endswith('s') else x for x in NOUNS if not x.endswith('s') or singled_if_word(x)]
 
 	VERBS = load('verbs.txt')
@@ -37,8 +39,25 @@ C = ['the', 'the', 'all those', 'so many']
 C2 = ['the', 'the', 'all those']
 coin_flip = lambda p: random.random() < p
 
-def random_imperative():
-	n = random.choice(NOUNS)
+def get_related_noun_or_not(noun, d=True):
+	w = wordnet.synsets(noun)
+	if w:
+		w = w[0]
+		w1 = w.hyponyms()
+		w2 = w.hypernyms()
+		if w1 + w2:
+			nw = random.choice(w1 + w2)
+			if nw and nw.senses:
+				return nw.senses[0]
+	elif wordnet.synsets(singularize(noun)) and d:
+		return get_related_noun_or_not(singularize(noun, False))
+	return noun
+
+def random_imperative(noun=None):
+	if noun:
+		n = get_related_noun_or_not(noun)
+	else:
+		n = random.choice(NOUNS)
 	v = random.choice(VERBS)
 	c = ''
 
@@ -93,18 +112,29 @@ def add_qualifier(phrase):
 	qual = '{0} you {1} {2}'.format(n, a, v)
 	return '{0} {1} {2}'.format(phrase, b, qual)
 
-def main(N=50):
-	for i in xrange(N):
+def protect_against_plurals(word):
+	wd = word
+	if word.endswith('s'):
+		wd = singled_if_word(word) if singled_if_word(word) else word
+		if wd == word:
+			wd = singled_if_word_2(word) if singled_if_word_2(word) else word
+	return wd
+
+def main(N=50, subject=None):
+	if subject:
+		subject = protect_against_plurals(subject)
+	for _ in xrange(N):
 		if coin_flip(0.5):
-			imp = random_imperative()
+			imp = random_imperative(subject)
 		else:
-			imp = add_qualifier(random_imperative())
+			imp = add_qualifier(random_imperative(subject))
 		print imp.capitalize() + '.'
 
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--N", default=50, type=int, help="The number of imperatives to generate.")
+parser.add_argument("--S", default=None, type=str, help="The related subject of the imperatives.")
 args = parser.parse_args()
 
 if __name__ == '__main__':
-	main(args.N)
+	main(args.N, args.S)
