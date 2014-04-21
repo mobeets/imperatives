@@ -1,5 +1,9 @@
+#!/usr/bin/env python
+# encoding=utf-8
+
 import re
 import random
+import argparse
 
 # http://www.clips.ua.ac.be/pages/pattern-en
 from pattern.en import wordnet, conjugate, pluralize, singularize, quantify
@@ -97,5 +101,10 @@ def main(N=50):
 			imp = add_qualifier(random_imperative())
 		print imp.capitalize() + '.'
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--N", default=50, type=int, help="The number of imperatives to generate.")
+args = parser.parse_args()
+
 if __name__ == '__main__':
-	main()
+	main(args.N)
