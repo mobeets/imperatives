@@ -25,7 +25,7 @@ Using the text from a few books on Project Gutenberg (`nltk.corpus.gutenberg`), 
 	Never open windows.
 	Start opening the windows.
 
-## _imperatives_random.py_
+### imperatives_random.py
 
 Using [lists](http://dictionary-thesaurus.com/wordlists.html) of basic nouns, verbs, and adjectives, construct a sentence similar to the form `{start/stop} {verb}ing {the/all those/so many} {adjective} {noun}s.` Sometimes it might add on a qualifier, like `{of/for} {noun}s you {can/cannot} {verb}.`
 
