@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding=utf-8
+
 import random
 import nltk
 from nltk.stem.wordnet import WordNetLemmatizer
