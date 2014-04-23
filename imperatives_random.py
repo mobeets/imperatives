@@ -46,7 +46,7 @@ def get_related_noun_or_not(noun, d=True):
 		w1 = w.hyponyms()
 		w2 = w.hypernyms()
 		if w1 + w2:
-			nw = random.choice(w1 + w2)
+			nw = random.choice([w] + w1 + w2)
 			if nw and nw.senses:
 				return nw.senses[0]
 	elif wordnet.synsets(singularize(noun)) and d:
